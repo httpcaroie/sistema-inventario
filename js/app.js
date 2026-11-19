@@ -248,6 +248,18 @@ $('#product-form').addEventListener('submit', async (event) => {
   const minStock = Number($('#product-min-stock').value);
   if (!name || !code || !category || !Number.isFinite(price) || price <= 0 || !Number.isInteger(stock) || stock < 0 || !Number.isInteger(minStock) || minStock < 0) return showToast('Revisa los datos del producto.', 'error');
 
+  const codigoRepetido = state.products.some(
+  (producto) =>
+    String(producto.code || '').trim().toUpperCase() === code &&
+    producto.id !== id
+);
+
+if (codigoRepetido) {
+  return showToast(
+    'Ya existe un producto con ese codigo. Ingresa uno diferente.',
+    'error'
+  );
+}
   const values = { name, code, category, unit_price: price, min_stock: minStock };
   let result;
   if (id) {
