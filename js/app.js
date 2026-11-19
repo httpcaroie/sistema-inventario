@@ -187,7 +187,7 @@ function renderStock() {
 
 function renderSales() {
   const rows = [...state.sales].slice(0, 20);
-  $('#sales-table').innerHTML = rows.length ? rows.map((item) => `<tr><td>${dateTime.format(new Date(item.createdAt))}</td><td>${escapeHTML(item.productName)}</td><td>${item.quantity}</td><td>${currency.format(item.total)}</td></tr>`).join('') : emptyState('Todavia no hay ventas registradas.');
+  $('#sales-table').innerHTML = rows.length ? rows.map((item) => `<tr><td>${dateTime.format(new Date(item.createdAt))}</td><td>${escapeHTML(item.productName)}</td><td>${item.quantity}</td><td>${currency.format(item.unitPrice)}</td><td>${currency.format(item.total)}</td></tr>`).join('') : emptyState('Todavia no hay ventas registradas.');
 }
 
 function renderReports() {
