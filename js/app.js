@@ -165,8 +165,11 @@ function renderDashboard() {
 }
 
 function renderProducts() {
-  const query = $('#product-search').value.trim().toLocaleLowerCase('es');
-  const products = state.products.filter((item) => `${item.name} ${item.code} ${item.category}`.toLocaleLowerCase('es').includes(query));
+ const normalize = (value) => String(value ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().replace(/\s+/g, ' ').toLocaleLowerCase('es');
+const query = normalize($('#product-search').value);
+ const products = state.products.filter((item) =>
+  normalize(`${item.name} ${item.code} ${item.category}`).includes(query)
+);
   $('#product-count').textContent = `${products.length} ${products.length === 1 ? 'producto' : 'productos'}`;
   $('#products-table').innerHTML = products.length ? products.map((item) => `<tr><td><strong>${escapeHTML(item.name)}</strong></td><td>${escapeHTML(item.code)}</td><td>${escapeHTML(item.category)}</td><td>${currency.format(item.price)}</td><td>${item.stock}</td><td>${statusFor(item)}</td><td class="actions-cell"><button class="text-button" type="button" data-action="edit-product" data-id="${item.id}">Editar</button><button class="text-button danger-text" type="button" data-action="delete-product" data-id="${item.id}">Eliminar</button></td></tr>`).join('') : emptyState(query ? 'No se encontraron productos.' : 'Todavia no hay productos registrados.', 'Usa el boton Nuevo producto para comenzar.');
 }
