@@ -182,7 +182,7 @@ function renderProductOptions() {
 
 function renderStock() {
   const rows = [...state.movements].sort((a, b) => b.createdAt - a.createdAt).slice(0, 20);
-  $('#stock-table').innerHTML = rows.length ? rows.map((item) => `<tr><td>${dateTime.format(new Date(item.createdAt))}</td><td>${escapeHTML(item.productName)}</td><td><span class="pill ${item.type === 'in' ? 'success' : 'warning'}">${item.type === 'in' ? 'Entrada' : 'Salida'}</span></td><td>${item.quantity}</td></tr>`).join('') : emptyState('No hay movimientos registrados.');
+  $('#stock-table').innerHTML = rows.length ? rows.map((item) => `<tr><td>${dateTime.format(new Date(item.createdAt))}</td><td>${escapeHTML(item.productName)}</td><td><span class="pill ${item.type === 'in' ? 'success' : 'warning'}">${item.type === 'in' ? 'Entrada' : 'Salida'}</span></td><td>${item.quantity}</td><td>${escapeHTML(item.note || '—')}</td></tr>`).join('') : emptyState('No hay movimientos registrados.');
 }
 
 function renderSales() {
