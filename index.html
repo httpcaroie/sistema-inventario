@@ -82,7 +82,15 @@
       </section>
 
       <section class="view" id="view-reports">
-        <div class="section-intro"><div><p class="eyebrow">RESULTADOS</p><h2>Reportes</h2><p>Consulta indicadores y resumenes de la actividad del inventario.</p></div><button class="secondary-button" id="export-report" type="button">&#8595; Exportar CSV</button></div>
+        <div class="section-intro"><div><p class="eyebrow">RESULTADOS</p><h2>Reportes</h2><p>Consulta indicadores y resumenes de la actividad del inventario.</p></div><div class="report-actions">
+    <button class="secondary-button" id="export-report" type="button">
+        &#8595; Exportar inventario CSV
+    </button>
+
+    <button class="secondary-button" id="export-sales-report" type="button">
+        &#8595; Exportar ventas CSV
+    </button>
+</div></div>
         <div class="stats-grid report-stats"><article class="stat-card"><span class="stat-label">Valor del inventario</span><strong class="stat-value" id="report-value">$ 0</strong><small>Precio por existencias</small></article><article class="stat-card"><span class="stat-label">Ingresos por ventas</span><strong class="stat-value" id="report-revenue">$ 0</strong><small>Ventas registradas</small></article><article class="stat-card"><span class="stat-label">Unidades vendidas</span><strong class="stat-value" id="report-units-sold">0</strong><small>Unidades acumuladas</small></article><article class="stat-card"><span class="stat-label">Productos agotados</span><strong class="stat-value" id="report-empty">0</strong><small>Referencias sin existencias</small></article></div>
         <article class="panel"><div class="panel-heading"><div><p class="eyebrow">EXISTENCIAS</p><h3>Estado actual de productos</h3></div></div><div class="table-wrap"><table><thead><tr><th>PRODUCTO</th><th>CODIGO</th><th>STOCK</th><th>PRECIO</th><th>VALOR TOTAL</th><th>ESTADO</th></tr></thead><tbody id="report-table"></tbody></table></div></article>
       </section>

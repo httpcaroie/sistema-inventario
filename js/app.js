@@ -357,7 +357,43 @@ $('#export-report').addEventListener('click', () => {
   const link = document.createElement('a'); link.href = url; link.download = 'reporte-inventario.csv'; link.click(); URL.revokeObjectURL(url);
   showToast('Reporte CSV descargado.');
 });
+$('#export-sales-report').addEventListener('click', () => {
+  if (!state.sales.length) {
+    return showToast('No hay ventas para exportar.', 'error');
+  }
 
+  const rows = [
+    ['Fecha', 'Producto', 'Cantidad', 'Precio unitario COP', 'Total COP']
+  ];
+
+  state.sales.forEach((item) => rows.push([
+    dateTime.format(new Date(item.createdAt)),
+    item.productName,
+    item.quantity,
+    item.unitPrice,
+    item.total
+  ]));
+
+  const csv = '\uFEFF' + rows.map((row) =>
+    row.map((value) =>
+      `"${String(value ?? '').replace(/"/g, '""')}"`
+    ).join(';')
+  ).join('\r\n');
+
+  const blob = new Blob([csv], {
+    type: 'text/csv;charset=utf-8;'
+  });
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+
+  link.href = url;
+  link.download = 'reporte-ventas.csv';
+  link.click();
+
+  URL.revokeObjectURL(url);
+  showToast('Reporte de ventas CSV descargado.');
+});
 $('#product-dialog').addEventListener('click', (event) => {
   if (event.target === $('#product-dialog')) closeProductDialog();
 });
