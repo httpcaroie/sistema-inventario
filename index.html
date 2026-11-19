@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Sistema funcional de gestion de inventario para un proyecto academico de mantenimiento de software.">
+  <title>Inventario | Sistema conectado a Supabase</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#dashboard" aria-label="Ir al resumen">
+        <span class="brand-mark">IG</span>
+        <span><strong>Inventario</strong><small>Gestion sencilla</small></span>
+      </a>
+      <nav class="main-nav" aria-label="Navegacion principal">
+        <button class="nav-link active" type="button" data-view="dashboard"><span class="nav-icon">&#9632;</span> Resumen</button>
+        <button class="nav-link" type="button" data-view="products"><span class="nav-icon">&#9633;</span> Productos</button>
+        <button class="nav-link" type="button" data-view="stock"><span class="nav-icon">&#8645;</span> Inventario</button>
+        <button class="nav-link" type="button" data-view="sales"><span class="nav-icon">&#36;</span> Ventas</button>
+        <button class="nav-link" type="button" data-view="reports"><span class="nav-icon">&#9636;</span> Reportes</button>
+      </nav>
+      <div class="sidebar-note"><span class="status-dot"></span><span><strong>Proyecto academico</strong><small>Version 2.0 · Base de datos en la nube</small></span></div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div><p class="eyebrow">PANEL DE CONTROL</p><h1 id="page-title">Resumen general</h1></div>
+        <div class="topbar-right"><span class="date-label" id="today-label"></span><span class="avatar" aria-label="Usuario">U</span></div>
+      </header>
+
+      <section class="view active" id="view-dashboard">
+        <div class="welcome-card"><div><p class="eyebrow light">BIENVENIDO</p><h2>Administra tu inventario<br>desde un solo lugar.</h2><p class="welcome-copy">Registra productos, controla existencias y consulta el movimiento de tu negocio.</p></div><div class="welcome-art" aria-hidden="true"><div class="art-box art-box-one"></div><div class="art-box art-box-two"></div><div class="art-box art-box-three"></div></div></div>
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-icon purple">&#9633;</div><span class="stat-label">Productos registrados</span><strong class="stat-value" id="stat-products">0</strong><small>Referencias en el catalogo</small></article>
+          <article class="stat-card"><div class="stat-icon blue">&#8645;</div><span class="stat-label">Unidades disponibles</span><strong class="stat-value" id="stat-units">0</strong><small>Existencias actuales</small></article>
+          <article class="stat-card"><div class="stat-icon green">&#36;</div><span class="stat-label">Ventas registradas</span><strong class="stat-value" id="stat-sales">0</strong><small>Transacciones realizadas</small></article>
+          <article class="stat-card"><div class="stat-icon orange">!</div><span class="stat-label">Stock bajo</span><strong class="stat-value" id="stat-low">0</strong><small>Productos en nivel minimo</small></article>
+        </div>
+        <div class="content-grid">
+          <article class="panel"><div class="panel-heading"><div><p class="eyebrow">ACTIVIDAD</p><h3>Actividad reciente</h3></div><span class="tag">Ultimos movimientos</span></div><div id="recent-activity" class="activity-list"><div class="empty-state"><div class="empty-icon">&#9776;</div><strong>Aun no hay movimientos</strong><p>Registra productos, movimientos o ventas para ver la actividad.</p></div></div></article>
+          <article class="panel quick-panel"><div class="panel-heading"><div><p class="eyebrow">ACCESOS RAPIDOS</p><h3>Comienza aqui</h3></div></div><button class="quick-action" type="button" data-go="products"><span class="quick-icon purple">+</span><span><strong>Registrar productos</strong><small>Agrega referencias al catalogo</small></span><span class="arrow">&#8594;</span></button><button class="quick-action" type="button" data-go="stock"><span class="quick-icon blue">&#8645;</span><span><strong>Actualizar inventario</strong><small>Registra entradas y salidas</small></span><span class="arrow">&#8594;</span></button><button class="quick-action" type="button" data-go="sales"><span class="quick-icon green">&#36;</span><span><strong>Registrar una venta</strong><small>Controla las transacciones</small></span><span class="arrow">&#8594;</span></button></article>
+        </div>
+      </section>
+
+      <section class="view" id="view-products">
+        <div class="section-intro"><div><p class="eyebrow">CATALOGO</p><h2>Productos</h2><p>Administra las referencias disponibles en el sistema.</p></div><button class="primary-button" id="add-product-button" type="button">+ Nuevo producto</button></div>
+        <article class="panel"><div class="toolbar"><label class="search-box"><span>&#9906;</span><input id="product-search" type="search" placeholder="Buscar por nombre o codigo..." aria-label="Buscar productos"></label><span class="tag" id="product-count">0 productos</span></div><div class="table-wrap"><table><thead><tr><th>PRODUCTO</th><th>CODIGO</th><th>CATEGORIA</th><th>PRECIO</th><th>STOCK</th><th>ESTADO</th><th>ACCIONES</th></tr></thead><tbody id="products-table"></tbody></table></div></article>
+      </section>
+
+      <section class="view" id="view-stock">
+        <div class="section-intro"><div><p class="eyebrow">CONTROL DE EXISTENCIAS</p><h2>Inventario</h2><p>Registra entradas y salidas para mantener actualizado el stock.</p></div></div>
+        <div class="two-column">
+          <article class="panel form-panel"><div class="panel-heading"><div><p class="eyebrow">MOVIMIENTO</p><h3>Nuevo movimiento</h3></div></div>
+            <form id="stock-form" class="form-grid">
+              <label class="field full">Producto<select id="stock-product" required><option value="">Selecciona un producto</option></select></label>
+              <label class="field">Tipo de movimiento<select id="stock-type" required><option value="in">Entrada</option><option value="out">Salida</option></select></label>
+              <label class="field">Cantidad<input id="stock-quantity" type="number" min="1" step="1" required placeholder="Ej. 10"></label>
+              <label class="field full">Observacion<input id="stock-note" type="text" maxlength="120" placeholder="Ej. Compra a proveedor"></label>
+              <div class="full form-actions"><button class="primary-button" type="submit">Guardar movimiento</button></div>
+            </form>
+          </article>
+          <article class="panel"><div class="panel-heading"><div><p class="eyebrow">HISTORIAL</p><h3>Movimientos recientes</h3></div></div><div class="table-wrap"><table><thead><tr><th>FECHA</th><th>PRODUCTO</th><th>TIPO</th><th>CANTIDAD</th></tr></thead><tbody id="stock-table"></tbody></table></div></article>
+        </div>
+      </section>
+
+      <section class="view" id="view-sales">
+        <div class="section-intro"><div><p class="eyebrow">TRANSACCIONES</p><h2>Ventas</h2><p>Registra ventas y descuenta automaticamente las unidades del inventario.</p></div></div>
+        <div class="two-column">
+          <article class="panel form-panel"><div class="panel-heading"><div><p class="eyebrow">REGISTRO</p><h3>Nueva venta</h3></div></div>
+            <form id="sale-form" class="form-grid">
+              <label class="field full">Producto<select id="sale-product" required><option value="">Selecciona un producto</option></select></label>
+              <label class="field">Cantidad<input id="sale-quantity" type="number" min="1" step="1" required placeholder="Ej. 1"></label>
+              <label class="field">Precio unitario<input id="sale-price" type="text" readonly placeholder="$ 0"></label>
+              <div class="sale-total full"><span>Total de la venta</span><strong id="sale-total">$ 0</strong></div>
+              <div class="full form-actions"><button class="primary-button" type="submit">Registrar venta</button></div>
+            </form>
+          </article>
+          <article class="panel"><div class="panel-heading"><div><p class="eyebrow">HISTORIAL</p><h3>Ventas recientes</h3></div></div><div class="table-wrap"><table><thead><tr><th>FECHA</th><th>PRODUCTO</th><th>CANT.</th><th>TOTAL</th></tr></thead><tbody id="sales-table"></tbody></table></div></article>
+        </div>
+      </section>
+
+      <section class="view" id="view-reports">
+        <div class="section-intro"><div><p class="eyebrow">RESULTADOS</p><h2>Reportes</h2><p>Consulta indicadores y resumenes de la actividad del inventario.</p></div><button class="secondary-button" id="export-report" type="button">&#8595; Exportar CSV</button></div>
+        <div class="stats-grid report-stats"><article class="stat-card"><span class="stat-label">Valor del inventario</span><strong class="stat-value" id="report-value">$ 0</strong><small>Precio por existencias</small></article><article class="stat-card"><span class="stat-label">Ingresos por ventas</span><strong class="stat-value" id="report-revenue">$ 0</strong><small>Ventas registradas</small></article><article class="stat-card"><span class="stat-label">Unidades vendidas</span><strong class="stat-value" id="report-units-sold">0</strong><small>Unidades acumuladas</small></article><article class="stat-card"><span class="stat-label">Productos agotados</span><strong class="stat-value" id="report-empty">0</strong><small>Referencias sin existencias</small></article></div>
+        <article class="panel"><div class="panel-heading"><div><p class="eyebrow">EXISTENCIAS</p><h3>Estado actual de productos</h3></div></div><div class="table-wrap"><table><thead><tr><th>PRODUCTO</th><th>CODIGO</th><th>STOCK</th><th>PRECIO</th><th>VALOR TOTAL</th><th>ESTADO</th></tr></thead><tbody id="report-table"></tbody></table></div></article>
+      </section>
+
+      <footer class="footer"><span>Sistema de gestion de inventario</span><span id="cloud-status">Iniciando conexion con Supabase...</span></footer>
+    </main>
+  </div>
+
+  <dialog id="product-dialog" class="modal">
+    <form id="product-form" method="dialog">
+      <div class="modal-heading"><div><p class="eyebrow">CATALOGO</p><h2 id="product-dialog-title">Nuevo producto</h2></div><button class="icon-button" type="button" id="close-product-dialog" aria-label="Cerrar">&#10005;</button></div>
+      <input id="product-id" type="hidden">
+      <div class="form-grid">
+        <label class="field full">Nombre del producto<input id="product-name" type="text" maxlength="70" required placeholder="Ej. Teclado inalambrico"></label>
+        <label class="field">Codigo<input id="product-code" type="text" maxlength="24" required placeholder="Ej. TEC-001"></label>
+        <label class="field">Categoria<input id="product-category" type="text" maxlength="40" required placeholder="Ej. Accesorios"></label>
+        <label class="field">Precio unitario (COP)<input id="product-price" type="number" min="1" step="1" required placeholder="Ej. 85000"></label>
+        <label class="field">Stock inicial<input id="product-stock" type="number" min="0" step="1" required placeholder="Ej. 20"></label>
+        <label class="field full">Nivel minimo de stock<input id="product-min-stock" type="number" min="0" step="1" value="5" required></label>
+      </div>
+      <div class="modal-actions"><button class="secondary-button" type="button" id="cancel-product">Cancelar</button><button class="primary-button" type="submit">Guardar producto</button></div>
+    </form>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
