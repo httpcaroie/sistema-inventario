@@ -1,6 +1,6 @@
 # Sistema de gestion de inventario
 
-Proyecto academico para la actividad de Mantenimiento de Software de la IBERO.
+Proyecto academico para la actividad de Mantenimiento de Software de la CORPORACION UNIVERSITARIA IBEROAMERICANA.
 
 ## Descripcion
 
